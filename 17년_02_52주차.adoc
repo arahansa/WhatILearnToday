@@ -1,0 +1,170 @@
+# 2017 2/52 주차 공부 정리와 느낌
+
+### 업무
+
+
+
+
+# 상세
+==================
+월욜: js 패턴 스터디 참여.. 콜백 패턴.. 
+
+참조는 식별자를 통해 식별
+값은 값을 통해 식별
+
+참조와 값은 언어가 정한다.
+자바스크립트에서는 문자열이 값이지만, 자바에서는 참조형
+
+
+var Myapp = Myapp && Myapp.hasOwnProperty("isPackage") ? Myapp : {isPackage:true};
+key = $89889439834$$$dfkjdfjk
+
+toString
+valueOf
+toJSON
+-------
+
+var a = function()
+a.prototype
+a.prototype = {constructor:a}
+
+var instance = new a();
+instance.proto = a.prototype
+
+1. new 한 효과는 어떤 객체의 proto  속성에 a.prototype 을 넣기 위해서이다.
+var instance = Object.create(a.prototype);
+
+1. 왜 객체만 넣어주면 되는데
+2. 쓸데없이 함수a를 만들어서
+3. 굳이 그 a.prototype을 넣어줄라그래?
+var instance = Object.create({});
+
+생성자가 없는 메소드와 속성만 정의한 클래스를 객체로 만들자.
+var class1 = {method1:function(){}, staticField:'aaa'};
+var instance1 = Object.create(class1), instance2 = Object.create(class1);
+
+그런데 생성자는 어떻게 해?
+var instance1 = Object.create(class1);
+instance1.init();
+이렇게 하나..?
+
+class1 = function(){}
+class1.prototype = {...};
+var instance1 = new class1();
+
+다시 이렇게 ? 
+
+객체만 기반으로 하게 되면 instanceOf 를 사용할 수가 없다... 
+
+a instanceof b  는 a 의 프로토타입체인상의 __proto__ 전체가 b.prototype 객체에 일치하는지 순차적으로 체인을 검사.
+{}로 만든 것은 proto 가 없다... 
+
+생성자 강제..불안정? 
+
+134페이지.. this 가 인
+a = new Marsupial("a", true);
+Marsupial.call(a);
+요렇게 하면 뚫릴수도..?
+
+구제방법 : 생성타임 마커? 
+Mar = function Mar(n, u){
+      if(!(this instanceof Mar) || this.hasOwnProperty("regddfsergf")) throw 1;
+      this.regddfsergf = true;
+};
+
+제일 좋은 것은 팩토리 함수를 노출하는 것..!
+
+Mar = (function(){
+    var Mar = function(){};
+   return function(n, u){
+      return new Mar(n, u);
+  }
+})();
+a = Mar("a", true);
+
+팩토리 함수로 인스턴스 만드는 게 정상이다~~
+
+------
+기존의 프로토타입을 사용하면 반드시 예외가 생길 수 있다...
+정상적 동작인지 프로토타입체인인지 구별하는 예외가 생길 수 있다.
+
+var Parent = function(){}
+var Child = function(){}
+Child.prototype = new Parent();
+p1 = new Parent();
+
+이녀석이 상속을 받기 위한 녀석인가? ~ 
+// 마커를 넣는다. 
+var isChaining = {};
+var Parent = function(a){
+ if( a === isChaining) return;
+}
+Child.prototype = new Parent(isChaining);
+
+ES5 에서 말하는 사이드 이펙트 없는 생성.. Child.prototype = Object.create(Parent.prototype);
+---
+
+3.7 함수형 상속
+함수형은 호출로 해결
+함수의 지연을 이용하는 여러가지 방법이 있다... 
+
+3.8 멍키패칭 
+말은 유명하나 실제로는 별 거 아니다. 
+
+---
+4장..
+4장에 대한 책 한권 추천 : 프로그래밍 패턴이라는 책
+코드 골프
+자료구조 : http://www.yes24.com/24/goods/22885878?Pcode=013
+---
+5장 콜백 패턴
+하나가 실현되는 거를 짜다가 그다음 두개 그다음 세개. 그러다가 규칙성을 발견하고
+그래야 N 개가 병합되는 테스트를 짜라..?  => 이 함수가 무엇을 하는 지 인지하게 됨.
+역리버스하면 이 함수의 내용이 나옴.
+
+purpose 랑 definition 이라는 게 있는데.. 
+잘 몰르니까... purpose 로 대답한다.
+
+iterate 의 예.. 여러개 0개..
+
+
+this 를 안 쓸려면 인자를 넘기면 된다. 
+this 대신에 event.currentTarget? 버블링이 일어나면? 
+currentTarget 은 델리게이션때 위험해서.. 
+
+뷰는 뷰적인 내용외에는 전해줄 게 없다. 뷰에 데이터를 업데이트 하면 누가 원본인가?
+뷰는 모델의 뷰어가 되어야 한다.
+var userid = model[getIndex(e.target)];
+---
+
+attendees.iterate(counter.countIfCheckedIn.bind(counter))
+정상이다
+👌2 👎16 🖐4
+attendees.iterate(counter.countIfCheckedIn.bind(counter))
+-----------
+attendees.iterate(counter.countIfCheckedIn)
+1. counter를 얻는 과정
+Conference.checkedInAttendeeCounter();
+펙토리함수를 통해 얻는다
+2. 팩토리함수는 인스턴스를 리턴
+counter는 인스턴스
+c1 = Conference.checkedInAttendeeCounter();
+c2 = Conference.checkedInAttendeeCounter()
+c1.countIfChecked
+attendees.iterate(counter.countIfCheckedIn)
+attendees.iterate(c1.iterator());
+
+------------
+Conf.checkCounter = (function(){
+  var cls = {
+       increment:function(){},
+      getCount:function(){},
+     countIf:function(){},
+     iterator:function(method){
+          return cls.method.bind(this);
+     }
+};
+  return function(){
+         return Object.create(cls);
+  }
+})();
