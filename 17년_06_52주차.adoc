@@ -9,7 +9,7 @@
 화욜 :
 수욜 :
 목욜 :
-금욜 :
+금욜 : 워렌 버핏 아이 투자...
 토욜 :
 
 
@@ -45,3 +45,29 @@ Scheduler.prototype.transpotation = function(detail){
 생성자의 인자는 인스턴스와의 바인딩이 항구적일때
 그리고 필수적이다.
 mandatory
+
+---
+테스트코드로 알 수 있는 것들..
+
+Factory.create(detail)
+인자 detail - 생성시 필요한 상세정보가 들어있는 객체 또는 값
+반환값 Interface Company
+Interface Company
+
+promise schedulePickup(detail)
+
+---
+function(a,b,c,d)
+function(a,b,c,d){
+ var white = {};
+if(validataion(a)) white.a = a;
+else throw;
+if(validataion(b)) white.b = b;
+else throw;
+//-------------------------
+white.a, white.b
+//순수한 비지니스로직
+//밸리와 로직이 복잡하게 섞여있음
+a에 대한 자세한 스펙을 기술해두고
+b에 대한 자세한 스펙을 기술해두면
+자동으로 공통 밸리데이터가 인자를 다 처리한뒤 함수내부가 시작
